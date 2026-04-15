@@ -1,0 +1,331 @@
+[
+  {
+    "id": 0,
+    "author": "user",
+    "payload": {
+      "type": "text",
+      "text": "Build a \"plant doctor \" web application using a single-page React/Tailwind CSS architecture. \n\nThe core vibe is \"Digital Botanist\"—clean, natural green accents, and very fast.\n\nFeatures required:\n1. Real-time Camera Feed: Add a \"Start Scanning\" button that opens the device camera. The UI should have a viewfinder overlay.\n2. Snapshot Analysis: A \"Capture & Diagnose\" button that grabs a frame, sends it to Gemini 2.5 Flash, and identifies the plant and any visible diseases (like leaf rust, blight, or aphids).\n3. Recommendation Engine: Below the result, show a \"Treatment Plan\" card including:\n   - Diagnosis & Confidence Level.\n   - Immediate Actions (e.g., \"Prune affected leaves\").\n   - Organic vs. Chemical recommendations.\n4. History Log: A simple sidebar or bottom sheet that stores the last 5 scans locally.\n\nTech Stack Preferences:\n- Use the `@google/genai` SDK for the vision logic.\n- Use Lucide-React for icons (leaf, camera, alert-circle).\n- Ensure the layout is mobile-responsive since farmers will use this in the field.\n\nJust give me the functional code in a way that I can run immediately in a Vite/React environment.",
+      "files": [],
+      "fileUploads": [],
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771503373,
+      "nanos": 224000000
+    }
+  },
+  {
+    "id": 1,
+    "author": "model",
+    "payload": {
+      "type": "thinking",
+      "text": "**Defining the Digital Botanist**\n\nI'm now zeroing in on the initial core features for this \"Plant Doctor\" app. I'm prioritizing the real-time camera feed and viewfinder as the primary user interaction point, and I'm envisioning the aesthetic - clean, natural, with green accents, and fast to make it feel like a Digital Botanist.\n\n\n**Refining the Feature Set**\n\nI'm now integrating the Snapshot Analysis with the Gemini 2.5 Flash, which has been selected for identification and diagnosis, alongside a recommendation engine for treatment plans. The History Log is being incorporated as a user-friendly feature, tracking the last five scans. The tech stack is defined as `@google/genai`, Lucide-React, and a mobile-responsive layout. I am leaning towards a single-page architecture, ESM, and TypeScript, with Gemini SDK patterns. The file structure is also defined.\n\n\n**Implementing Core Features**\n\nI'm now focusing on localStorage for history management and defining the camera component using a video element and canvas for capture. I've structured the Gemini analysis prompt to request plant name, health, diagnosis, and treatment in JSON format. For mobile, I'm setting up fixed bottom controls with clear icons. I'm also implementing the green theme using Tailwind classes.\n\n\n**Clarifying the Model Choice**\n\nI've clarified the use of `gemini-3-flash-preview` for image input and text output, adhering to the updated instructions. I'm focusing on the viewfinder design with rounded corners and a scanning line, alongside treatment plan cards categorized into organic and chemical methods, as well as a history implementation either as a slide-up drawer or side menu. I've also verified the API key retrieval, JSON response structure, camera access method, permissions, and styling using Tailwind's emerald and slate colors. I'm double checking to ensure that I should not have used \"Gemini 2.5 Flash\".\n\n\n",
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771503373,
+      "nanos": 224000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771503385,
+      "nanos": 501000000
+    }
+  },
+  {
+    "id": 2,
+    "author": "model",
+    "payload": {
+      "type": "generationTable",
+      "entries": [
+        {
+          "path": "metadata.json",
+          "generationType": 0,
+          "isDone": true,
+          "description": "Add application metadata and request camera permissions.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\n{\n  \"name\": \"Botanist AI - Digital Plant Doctor\",\n  \"description\": \"A professional-grade plant health diagnostic tool powered by Gemini AI, providing real-time analysis, disease identification, and detailed treatment plans.\",\n  \"requestFramePermissions\": [\n    \"camera\"\n  ]\n}\n"
+            }
+          ]
+        },
+        {
+          "path": "index.html",
+          "generationType": 0,
+          "isDone": true,
+          "description": "Main HTML entry point with Tailwind CSS and Font support.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Botanist AI</title>\n  <script src=\"https://cdn.tailwindcss.com\"></script>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link href=\"https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap\" rel=\"stylesheet\">\n  <style>\n    body {\n      font-family: 'Plus Jakarta Sans', sans-serif;\n      background-color: #f8fafc;\n    }\n    .scan-line {\n      position: absolute;\n      top: 0;\n      left: 0;\n      width: 100%;\n      height: 2px;\n      background: linear-gradient(to bottom, transparent, #10b981, transparent);\n      animation: scan 2s linear infinite;\n      z-index: 10;\n    }\n    @keyframes scan {\n      0% { top: 0%; opacity: 0; }\n      50% { opacity: 1; }\n      100% { top: 100%; opacity: 0; }\n    }\n  </style>\n</head>\n<body>\n  <div id=\"root\"></div>\n</body>\n</html>\n"
+            }
+          ]
+        },
+        {
+          "path": "index.tsx",
+          "generationType": 0,
+          "isDone": true,
+          "description": "React entry point initializing the application.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React from 'react';\nimport ReactDOM from 'react-dom/client';\nimport App from './App';\n\nconst rootElement = document.getElementById('root');\nif (!rootElement) {\n  throw new Error(\"Could not find root element to mount to\");\n}\n\nconst root = ReactDOM.createRoot(rootElement);\nroot.render(\n  <React.StrictMode>\n    <App />\n  </React.StrictMode>\n);\n"
+            }
+          ]
+        },
+        {
+          "path": "types.ts",
+          "generationType": 0,
+          "isDone": true,
+          "description": "Global TypeScript interfaces for the application.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nexport interface PlantDiagnosis {\n  plantName: string;\n  scientificName: string;\n  status: 'Healthy' | 'Diseased' | 'Stressed' | 'Unknown';\n  confidenceScore: number;\n  conditionName: string;\n  description: string;\n  immediateActions: string[];\n  organicTreatment: string;\n  chemicalTreatment: string;\n  preventionTips: string[];\n}\n\nexport interface DiagnosisHistoryItem {\n  id: string;\n  timestamp: number;\n  image: string;\n  diagnosis: PlantDiagnosis;\n}\n"
+            }
+          ]
+        },
+        {
+          "path": "services/geminiService.ts",
+          "generationType": 0,
+          "isDone": true,
+          "description": "Service layer to interact with the Gemini API for plant diagnosis.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport { GoogleGenAI, Type, GenerateContentResponse } from \"@google/genai\";\nimport { PlantDiagnosis } from \"../types\";\n\nexport const diagnosePlant = async (imageBase64: string): Promise<PlantDiagnosis> => {\n  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });\n  \n  const response = await ai.models.generateContent({\n    model: 'gemini-3-flash-preview',\n    contents: {\n      parts: [\n        {\n          inlineData: {\n            mimeType: 'image/jpeg',\n            data: imageBase64,\n          },\n        },\n        {\n          text: \"Act as a world-class digital botanist. Analyze this plant image. Identify the plant and detect any diseases, nutrient deficiencies, or pest infestations. Be precise with scientific names and provide actionable organic and chemical treatment advice. If the plant is healthy, say so.\"\n        }\n      ]\n    },\n    config: {\n      responseMimeType: \"application/json\",\n      responseSchema: {\n        type: Type.OBJECT,\n        properties: {\n          plantName: { type: Type.STRING },\n          scientificName: { type: Type.STRING },\n          status: { \n            type: Type.STRING,\n            description: \"One of: Healthy, Diseased, Stressed, Unknown\"\n          },\n          confidenceScore: { type: Type.NUMBER, description: \"Confidence level from 0 to 100\" },\n          conditionName: { type: Type.STRING, description: \"Name of the detected disease or 'None' if healthy\" },\n          description: { type: Type.STRING, description: \"Concise summary of current plant state\" },\n          immediateActions: { \n            type: Type.ARRAY, \n            items: { type: Type.STRING } \n          },\n          organicTreatment: { type: Type.STRING },\n          chemicalTreatment: { type: Type.STRING },\n          preventionTips: { \n            type: Type.ARRAY, \n            items: { type: Type.STRING } \n          }\n        },\n        required: [\n          \"plantName\", \"scientificName\", \"status\", \"confidenceScore\", \n          \"conditionName\", \"description\", \"immediateActions\", \n          \"organicTreatment\", \"chemicalTreatment\", \"preventionTips\"\n        ]\n      }\n    }\n  });\n\n  if (!response.text) {\n    throw new Error(\"Failed to get diagnosis from AI\");\n  }\n\n  return JSON.parse(response.text) as PlantDiagnosis;\n};\n"
+            }
+          ]
+        },
+        {
+          "path": "components/CameraView.tsx",
+          "generationType": 0,
+          "isDone": true,
+          "description": "A reusable camera component with viewfinder overlay and capture logic.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React, { useRef, useEffect, useState, useCallback } from 'react';\nimport { Camera, RefreshCw, X } from 'lucide-react';\n\ninterface CameraViewProps {\n  onCapture: (base64Image: string) => void;\n  onClose: () => void;\n}\n\nconst CameraView: React.FC<CameraViewProps> = ({ onCapture, onClose }) => {\n  const videoRef = useRef<HTMLVideoElement>(null);\n  const canvasRef = useRef<HTMLCanvasElement>(null);\n  const [stream, setStream] = useState<MediaStream | null>(null);\n  const [isInitializing, setIsInitializing] = useState(true);\n  const [error, setError] = useState<string | null>(null);\n\n  const startCamera = useCallback(async () => {\n    try {\n      setIsInitializing(true);\n      setError(null);\n      const constraints = {\n        video: { facingMode: 'environment' }\n      };\n      const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);\n      setStream(mediaStream);\n      if (videoRef.current) {\n        videoRef.current.srcObject = mediaStream;\n      }\n      setIsInitializing(false);\n    } catch (err) {\n      setError(\"Unable to access camera. Please check permissions.\");\n      setIsInitializing(false);\n    }\n  }, []);\n\n  useEffect(() => {\n    startCamera();\n    return () => {\n      if (stream) {\n        stream.getTracks().forEach(track => track.stop());\n      }\n    };\n  }, [startCamera]);\n\n  const captureFrame = () => {\n    if (videoRef.current && canvasRef.current) {\n      const video = videoRef.current;\n      const canvas = canvasRef.current;\n      const context = canvas.getContext('2d');\n      if (context) {\n        canvas.width = video.videoWidth;\n        canvas.height = video.videoHeight;\n        context.drawImage(video, 0, 0, canvas.width, canvas.height);\n        \n        const base64 = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];\n        onCapture(base64);\n      }\n    }\n  };\n\n  return (\n    <div className=\"fixed inset-0 z-50 bg-black flex flex-col\">\n      <div className=\"relative flex-1 bg-neutral-900 flex items-center justify-center overflow-hidden\">\n        {isInitializing && (\n          <div className=\"absolute inset-0 flex items-center justify-center text-white flex-col gap-4\">\n            <RefreshCw className=\"animate-spin h-8 w-8 text-emerald-400\" />\n            <p>Initializing sensor...</p>\n          </div>\n        )}\n        \n        {error ? (\n          <div className=\"p-6 text-center text-white\">\n            <p className=\"text-red-400 mb-4\">{error}</p>\n            <button \n              onClick={onClose}\n              className=\"bg-white/10 px-4 py-2 rounded-full\"\n            >\n              Go Back\n            </button>\n          </div>\n        ) : (\n          <>\n            <video \n              ref={videoRef} \n              autoPlay \n              playsInline \n              className=\"w-full h-full object-cover\"\n            />\n            {/* Viewfinder Overlay */}\n            <div className=\"absolute inset-0 flex items-center justify-center pointer-events-none p-12\">\n              <div className=\"w-full max-w-sm aspect-square border-2 border-emerald-400/50 rounded-3xl relative overflow-hidden\">\n                <div className=\"scan-line\" />\n                <div className=\"absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-emerald-400 rounded-tl-xl\" />\n                <div className=\"absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-emerald-400 rounded-tr-xl\" />\n                <div className=\"absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-emerald-400 rounded-bl-xl\" />\n                <div className=\"absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-emerald-400 rounded-br-xl\" />\n              </div>\n            </div>\n          </>\n        )}\n\n        <button \n          onClick={onClose}\n          className=\"absolute top-6 right-6 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors\"\n        >\n          <X size={24} />\n        </button>\n      </div>\n\n      <canvas ref={canvasRef} className=\"hidden\" />\n\n      <div className=\"h-32 bg-neutral-950 flex items-center justify-center\">\n        <button\n          onClick={captureFrame}\n          disabled={isInitializing}\n          className=\"h-20 w-20 bg-emerald-500 rounded-full border-4 border-white/20 flex items-center justify-center active:scale-95 transition-transform disabled:opacity-50\"\n        >\n          <Camera size={36} className=\"text-white\" />\n        </button>\n      </div>\n    </div>\n  );\n};\n\nexport default CameraView;\n"
+            }
+          ]
+        },
+        {
+          "path": "components/DiagnosisCard.tsx",
+          "generationType": 0,
+          "isDone": true,
+          "description": "Component for displaying detailed plant diagnosis and treatment plan.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React from 'react';\nimport { Leaf, AlertCircle, ShieldCheck, Beaker, Sprout, Info } from 'lucide-react';\nimport { PlantDiagnosis } from '../types';\n\ninterface DiagnosisCardProps {\n  diagnosis: PlantDiagnosis;\n  image?: string;\n}\n\nconst DiagnosisCard: React.FC<DiagnosisCardProps> = ({ diagnosis, image }) => {\n  const isHealthy = diagnosis.status === 'Healthy';\n\n  return (\n    <div className=\"w-full animate-in fade-in slide-in-from-bottom-4 duration-500\">\n      <div className=\"bg-white rounded-3xl shadow-xl overflow-hidden border border-emerald-100\">\n        {/* Header Section */}\n        <div className={`p-6 ${isHealthy ? 'bg-emerald-50' : 'bg-amber-50'} border-b border-emerald-100`}>\n          <div className=\"flex justify-between items-start\">\n            <div>\n              <h2 className=\"text-2xl font-bold text-slate-800\">{diagnosis.plantName}</h2>\n              <p className=\"text-slate-500 italic text-sm\">{diagnosis.scientificName}</p>\n            </div>\n            <div className={`px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2 ${\n              isHealthy ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white'\n            }`}>\n              {isHealthy ? <ShieldCheck size={16} /> : <AlertCircle size={16} />}\n              {diagnosis.status}\n            </div>\n          </div>\n          \n          <div className=\"mt-4 flex items-center gap-2 text-slate-600\">\n            <Info size={18} className=\"text-emerald-500\" />\n            <span className=\"text-sm font-medium\">Confidence Level: {diagnosis.confidenceScore}%</span>\n          </div>\n        </div>\n\n        <div className=\"p-6 space-y-8\">\n          {/* Main Condition */}\n          <section>\n            <div className=\"flex items-center gap-2 mb-3\">\n              <Leaf className=\"text-emerald-600\" size={20} />\n              <h3 className=\"font-bold text-slate-800\">Observation</h3>\n            </div>\n            <p className=\"text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-2xl\">\n              <span className=\"font-semibold text-slate-800\">{diagnosis.conditionName}:</span> {diagnosis.description}\n            </p>\n          </section>\n\n          {/* Treatment Engine */}\n          <div className=\"grid grid-cols-1 md:grid-cols-2 gap-6\">\n            <div className=\"bg-emerald-50/50 rounded-2xl p-5 border border-emerald-100\">\n              <div className=\"flex items-center gap-2 mb-3\">\n                <Sprout className=\"text-emerald-700\" size={20} />\n                <h4 className=\"font-bold text-emerald-900\">Organic Solutions</h4>\n              </div>\n              <p className=\"text-sm text-emerald-800 leading-relaxed\">\n                {diagnosis.organicTreatment}\n              </p>\n            </div>\n            <div className=\"bg-sky-50 rounded-2xl p-5 border border-sky-100\">\n              <div className=\"flex items-center gap-2 mb-3\">\n                <Beaker className=\"text-sky-700\" size={20} />\n                <h4 className=\"font-bold text-sky-900\">Chemical Recommendation</h4>\n              </div>\n              <p className=\"text-sm text-sky-800 leading-relaxed\">\n                {diagnosis.chemicalTreatment}\n              </p>\n            </div>\n          </div>\n\n          {/* Immediate Actions */}\n          <section>\n            <h4 className=\"font-bold text-slate-800 mb-3 text-sm uppercase tracking-wider\">Immediate Actions</h4>\n            <ul className=\"space-y-2\">\n              {diagnosis.immediateActions.map((action, idx) => (\n                <li key={idx} className=\"flex items-start gap-3 text-slate-600 text-sm\">\n                  <div className=\"mt-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0\" />\n                  {action}\n                </li>\n              ))}\n            </ul>\n          </section>\n\n          {/* Prevention */}\n          <section className=\"bg-slate-50 p-5 rounded-2xl border border-slate-200\">\n            <h4 className=\"font-bold text-slate-800 mb-3 text-sm uppercase tracking-wider\">Future Prevention</h4>\n            <div className=\"flex flex-wrap gap-2\">\n              {diagnosis.preventionTips.map((tip, idx) => (\n                <span key={idx} className=\"bg-white border border-slate-200 px-3 py-1 rounded-lg text-xs font-medium text-slate-600\">\n                  {tip}\n                </span>\n              ))}\n            </div>\n          </section>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default DiagnosisCard;\n"
+            }
+          ]
+        },
+        {
+          "path": "components/HistoryBar.tsx",
+          "generationType": 0,
+          "isDone": true,
+          "description": "A simple history log to show recent scans.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React from 'react';\nimport { History, ChevronRight } from 'lucide-react';\nimport { DiagnosisHistoryItem } from '../types';\n\ninterface HistoryBarProps {\n  items: DiagnosisHistoryItem[];\n  onSelectItem: (item: DiagnosisHistoryItem) => void;\n}\n\nconst HistoryBar: React.FC<HistoryBarProps> = ({ items, onSelectItem }) => {\n  if (items.length === 0) return null;\n\n  return (\n    <div className=\"mt-12 mb-8\">\n      <div className=\"flex items-center gap-2 mb-4 px-2\">\n        <History size={20} className=\"text-slate-400\" />\n        <h3 className=\"font-bold text-slate-700\">Recent Scans</h3>\n      </div>\n      <div className=\"flex flex-col gap-3\">\n        {items.map((item) => (\n          <button\n            key={item.id}\n            onClick={() => onSelectItem(item)}\n            className=\"flex items-center gap-4 p-4 bg-white rounded-2xl border border-slate-100 hover:border-emerald-200 transition-all text-left shadow-sm group\"\n          >\n            <div className=\"w-16 h-16 rounded-xl overflow-hidden bg-slate-100 shrink-0\">\n              <img \n                src={`data:image/jpeg;base64,${item.image}`} \n                alt={item.diagnosis.plantName} \n                className=\"w-full h-full object-cover\"\n              />\n            </div>\n            <div className=\"flex-1 min-w-0\">\n              <h4 className=\"font-bold text-slate-800 truncate\">{item.diagnosis.plantName}</h4>\n              <p className=\"text-xs text-slate-500\">\n                {new Date(item.timestamp).toLocaleDateString()} • {item.diagnosis.status}\n              </p>\n            </div>\n            <ChevronRight size={20} className=\"text-slate-300 group-hover:text-emerald-500 transition-colors\" />\n          </button>\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport default HistoryBar;\n"
+            }
+          ]
+        },
+        {
+          "path": "App.tsx",
+          "generationType": 0,
+          "isDone": true,
+          "description": "Main application logic managing camera, diagnosis states, and history.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React, { useState, useEffect } from 'react';\nimport { Plus, Leaf, Loader2, Sparkles, Sprout } from 'lucide-react';\nimport CameraView from './components/CameraView';\nimport DiagnosisCard from './components/DiagnosisCard';\nimport HistoryBar from './components/HistoryBar';\nimport { diagnosePlant } from './services/geminiService';\nimport { PlantDiagnosis, DiagnosisHistoryItem } from './types';\n\nconst STORAGE_KEY = 'botanist_ai_history';\n\nconst App: React.FC = () => {\n  const [isCameraOpen, setIsCameraOpen] = useState(false);\n  const [isAnalyzing, setIsAnalyzing] = useState(false);\n  const [currentDiagnosis, setCurrentDiagnosis] = useState<PlantDiagnosis | null>(null);\n  const [history, setHistory] = useState<DiagnosisHistoryItem[]>([]);\n  const [error, setError] = useState<string | null>(null);\n\n  // Load history on mount\n  useEffect(() => {\n    const saved = localStorage.getItem(STORAGE_KEY);\n    if (saved) {\n      setHistory(JSON.parse(saved));\n    }\n  }, []);\n\n  const saveToHistory = (diagnosis: PlantDiagnosis, image: string) => {\n    const newItem: DiagnosisHistoryItem = {\n      id: crypto.randomUUID(),\n      timestamp: Date.now(),\n      image,\n      diagnosis\n    };\n    const updatedHistory = [newItem, ...history].slice(0, 5);\n    setHistory(updatedHistory);\n    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedHistory));\n  };\n\n  const handleCapture = async (base64Image: string) => {\n    setIsCameraOpen(false);\n    setIsAnalyzing(true);\n    setError(null);\n    \n    try {\n      const result = await diagnosePlant(base64Image);\n      setCurrentDiagnosis(result);\n      saveToHistory(result, base64Image);\n    } catch (err) {\n      setError(\"Diagnosis failed. Please ensure the plant is clearly visible and try again.\");\n      console.error(err);\n    } finally {\n      setIsAnalyzing(false);\n    }\n  };\n\n  return (\n    <div className=\"min-h-screen pb-24\">\n      {/* Header */}\n      <header className=\"sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-emerald-50\">\n        <div className=\"max-w-xl mx-auto px-6 h-16 flex items-center justify-between\">\n          <div className=\"flex items-center gap-2\">\n            <div className=\"w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center\">\n              <Sprout className=\"text-white\" size={18} />\n            </div>\n            <h1 className=\"text-lg font-bold text-slate-900\">Botanist AI</h1>\n          </div>\n          <button \n            onClick={() => {\n              setCurrentDiagnosis(null);\n              setError(null);\n            }}\n            className=\"text-xs font-medium text-emerald-600 hover:bg-emerald-50 px-3 py-1 rounded-full transition-colors\"\n          >\n            Clear\n          </button>\n        </div>\n      </header>\n\n      {/* Main Content */}\n      <main className=\"max-w-xl mx-auto px-6 py-8\">\n        {!isAnalyzing && !currentDiagnosis && !error && (\n          <div className=\"text-center py-12 px-6\">\n            <div className=\"w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6\">\n              <Leaf className=\"text-emerald-500\" size={32} />\n            </div>\n            <h2 className=\"text-2xl font-bold text-slate-800 mb-2\">Ready to heal your plants?</h2>\n            <p className=\"text-slate-500 mb-8 max-w-xs mx-auto\">\n              Capture a clear photo of the leaves or stems to receive a professional botanical diagnosis.\n            </p>\n            <div className=\"bg-emerald-50 border border-emerald-100 p-4 rounded-2xl flex items-start gap-3 text-left mb-8\">\n              <Sparkles className=\"text-emerald-600 shrink-0\" size={20} />\n              <p className=\"text-xs text-emerald-800 leading-relaxed\">\n                Powered by Gemini AI vision logic for precision detection of pests, rust, blight, and nutrient issues.\n              </p>\n            </div>\n          </div>\n        )}\n\n        {isAnalyzing && (\n          <div className=\"flex flex-col items-center justify-center py-20 animate-pulse\">\n            <div className=\"relative\">\n              <div className=\"absolute inset-0 bg-emerald-400 rounded-full blur-xl opacity-20 animate-ping\" />\n              <Loader2 className=\"animate-spin text-emerald-500 mb-6 h-12 w-12\" />\n            </div>\n            <h3 className=\"text-lg font-bold text-slate-800\">Analyzing Specimen</h3>\n            <p className=\"text-sm text-slate-500 mt-2\">Connecting to Digital Botanist Network...</p>\n          </div>\n        )}\n\n        {error && (\n          <div className=\"bg-red-50 border border-red-100 p-6 rounded-3xl text-center mb-8\">\n            <h3 className=\"text-red-800 font-bold mb-2\">Analysis Interrupted</h3>\n            <p className=\"text-red-600 text-sm mb-4\">{error}</p>\n            <button \n              onClick={() => setIsCameraOpen(true)}\n              className=\"bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-bold\"\n            >\n              Retry Scan\n            </button>\n          </div>\n        )}\n\n        {currentDiagnosis && (\n          <DiagnosisCard diagnosis={currentDiagnosis} />\n        )}\n\n        <HistoryBar \n          items={history} \n          onSelectItem={(item) => {\n            setCurrentDiagnosis(item.diagnosis);\n            window.scrollTo({ top: 0, behavior: 'smooth' });\n          }} \n        />\n      </main>\n\n      {/* Floating Action Button */}\n      <div className=\"fixed bottom-8 left-0 right-0 px-6 flex justify-center pointer-events-none\">\n        <button\n          onClick={() => setIsCameraOpen(true)}\n          className=\"pointer-events-auto flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-full shadow-2xl shadow-emerald-900/20 active:scale-95 transition-transform group\"\n        >\n          <Plus className=\"group-hover:rotate-90 transition-transform\" />\n          <span className=\"font-bold tracking-tight\">Start Scanning</span>\n        </button>\n      </div>\n\n      {isCameraOpen && (\n        <CameraView \n          onCapture={handleCapture} \n          onClose={() => setIsCameraOpen(false)} \n        />\n      )}\n    </div>\n  );\n};\n\nexport default App;\n"
+            }
+          ]
+        }
+      ]
+    },
+    "createdTimestamp": {
+      "seconds": 1771503385,
+      "nanos": 505000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771503386,
+      "nanos": 294000000
+    }
+  },
+  {
+    "id": 4,
+    "author": "user",
+    "payload": {
+      "type": "text",
+      "text": "Add a button to upload an image file for diagnosis, in addition to the camera functionality.",
+      "files": [],
+      "fileUploads": [],
+      "cssBlocks": [],
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771503513,
+      "nanos": 507000000
+    }
+  },
+  {
+    "id": 5,
+    "author": "model",
+    "payload": {
+      "type": "thinking",
+      "text": "**Adding Image Upload Functionality**\n\nI'm currently focused on integrating an image upload feature within the `Plant Doctor` application's `App.tsx` file. I'm adding a state hook to manage the file input and thinking through how best to trigger the upload mechanism. I want to create a button that will allow users to upload images.\n\n\n",
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771503513,
+      "nanos": 507000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771503535,
+      "nanos": 207000000
+    }
+  },
+  {
+    "id": 6,
+    "author": "model",
+    "payload": {
+      "type": "generationTable",
+      "entries": [
+        {
+          "path": "App.tsx",
+          "generationType": 1,
+          "isDone": true,
+          "description": "Added image upload functionality alongside the camera scanning feature. Updated the UI to include a file upload button and logic to process uploaded images via the Gemini API.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React, { useState, useEffect, useRef } from 'react';\nimport { Plus, Leaf, Loader2, Sparkles, Sprout, Upload } from 'lucide-react';\nimport CameraView from './components/CameraView';\nimport DiagnosisCard from './components/DiagnosisCard';\nimport HistoryBar from './components/HistoryBar';\nimport { diagnosePlant } from './services/geminiService';\nimport { PlantDiagnosis, DiagnosisHistoryItem } from './types';\n\nconst STORAGE_KEY = 'botanist_ai_history';\n\nconst App: React.FC = () => {\n  const [isCameraOpen, setIsCameraOpen] = useState(false);\n  const [isAnalyzing, setIsAnalyzing] = useState(false);\n  const [currentDiagnosis, setCurrentDiagnosis] = useState<PlantDiagnosis | null>(null);\n  const [history, setHistory] = useState<DiagnosisHistoryItem[]>([]);\n  const [error, setError] = useState<string | null>(null);\n  const fileInputRef = useRef<HTMLInputElement>(null);\n\n  // Load history on mount\n  useEffect(() => {\n    const saved = localStorage.getItem(STORAGE_KEY);\n    if (saved) {\n      setHistory(JSON.parse(saved));\n    }\n  }, []);\n\n  const saveToHistory = (diagnosis: PlantDiagnosis, image: string) => {\n    const newItem: DiagnosisHistoryItem = {\n      id: crypto.randomUUID(),\n      timestamp: Date.now(),\n      image,\n      diagnosis\n    };\n    const updatedHistory = [newItem, ...history].slice(0, 5);\n    setHistory(updatedHistory);\n    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedHistory));\n  };\n\n  const handleCapture = async (base64Image: string) => {\n    setIsCameraOpen(false);\n    setIsAnalyzing(true);\n    setError(null);\n    \n    try {\n      const result = await diagnosePlant(base64Image);\n      setCurrentDiagnosis(result);\n      saveToHistory(result, base64Image);\n    } catch (err) {\n      setError(\"Diagnosis failed. Please ensure the plant is clearly visible and try again.\");\n      console.error(err);\n    } finally {\n      setIsAnalyzing(false);\n    }\n  };\n\n  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {\n    const file = event.target.files?.[0];\n    if (!file) return;\n\n    const reader = new FileReader();\n    reader.onloadend = () => {\n      const base64String = (reader.result as string).split(',')[1];\n      handleCapture(base64String);\n    };\n    reader.readAsDataURL(file);\n    // Reset input value to allow the same file to be uploaded again if needed\n    event.target.value = '';\n  };\n\n  const triggerFileUpload = () => {\n    fileInputRef.current?.click();\n  };\n\n  return (\n    <div className=\"min-h-screen pb-32\">\n      {/* Hidden File Input */}\n      <input \n        type=\"file\" \n        ref={fileInputRef} \n        onChange={handleFileUpload} \n        accept=\"image/*\" \n        className=\"hidden\" \n      />\n\n      {/* Header */}\n      <header className=\"sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-emerald-50\">\n        <div className=\"max-w-xl mx-auto px-6 h-16 flex items-center justify-between\">\n          <div className=\"flex items-center gap-2\">\n            <div className=\"w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center\">\n              <Sprout className=\"text-white\" size={18} />\n            </div>\n            <h1 className=\"text-lg font-bold text-slate-900\">Botanist AI</h1>\n          </div>\n          <button \n            onClick={() => {\n              setCurrentDiagnosis(null);\n              setError(null);\n            }}\n            className=\"text-xs font-medium text-emerald-600 hover:bg-emerald-50 px-3 py-1 rounded-full transition-colors\"\n          >\n            Clear\n          </button>\n        </div>\n      </header>\n\n      {/* Main Content */}\n      <main className=\"max-w-xl mx-auto px-6 py-8\">\n        {!isAnalyzing && !currentDiagnosis && !error && (\n          <div className=\"text-center py-12 px-6\">\n            <div className=\"w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6\">\n              <Leaf className=\"text-emerald-500\" size={32} />\n            </div>\n            <h2 className=\"text-2xl font-bold text-slate-800 mb-2\">Ready to heal your plants?</h2>\n            <p className=\"text-slate-500 mb-8 max-w-xs mx-auto\">\n              Capture or upload a clear photo of the leaves or stems for a botanical diagnosis.\n            </p>\n            <div className=\"bg-emerald-50 border border-emerald-100 p-4 rounded-2xl flex items-start gap-3 text-left mb-8\">\n              <Sparkles className=\"text-emerald-600 shrink-0\" size={20} />\n              <p className=\"text-xs text-emerald-800 leading-relaxed\">\n                Powered by Gemini AI vision logic for precision detection of pests, rust, blight, and nutrient issues.\n              </p>\n            </div>\n          </div>\n        )}\n\n        {isAnalyzing && (\n          <div className=\"flex flex-col items-center justify-center py-20 animate-pulse\">\n            <div className=\"relative\">\n              <div className=\"absolute inset-0 bg-emerald-400 rounded-full blur-xl opacity-20 animate-ping\" />\n              <Loader2 className=\"animate-spin text-emerald-500 mb-6 h-12 w-12\" />\n            </div>\n            <h3 className=\"text-lg font-bold text-slate-800\">Analyzing Specimen</h3>\n            <p className=\"text-sm text-slate-500 mt-2\">Connecting to Digital Botanist Network...</p>\n          </div>\n        )}\n\n        {error && (\n          <div className=\"bg-red-50 border border-red-100 p-6 rounded-3xl text-center mb-8\">\n            <h3 className=\"text-red-800 font-bold mb-2\">Analysis Interrupted</h3>\n            <p className=\"text-red-600 text-sm mb-4\">{error}</p>\n            <div className=\"flex gap-3 justify-center\">\n              <button \n                onClick={() => setIsCameraOpen(true)}\n                className=\"bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-bold\"\n              >\n                Retry Scan\n              </button>\n              <button \n                onClick={triggerFileUpload}\n                className=\"bg-red-50 text-red-700 px-4 py-2 rounded-full text-sm font-bold border border-red-200\"\n              >\n                Upload Instead\n              </button>\n            </div>\n          </div>\n        )}\n\n        {currentDiagnosis && (\n          <DiagnosisCard diagnosis={currentDiagnosis} />\n        )}\n\n        <HistoryBar \n          items={history} \n          onSelectItem={(item) => {\n            setCurrentDiagnosis(item.diagnosis);\n            window.scrollTo({ top: 0, behavior: 'smooth' });\n          }} \n        />\n      </main>\n\n      {/* Floating Action Buttons */}\n      <div className=\"fixed bottom-8 left-0 right-0 px-6 flex justify-center pointer-events-none gap-3\">\n        <button\n          onClick={triggerFileUpload}\n          className=\"pointer-events-auto flex items-center justify-center w-14 h-14 bg-white border border-slate-200 text-slate-700 rounded-full shadow-lg active:scale-95 transition-transform\"\n          title=\"Upload Photo\"\n        >\n          <Upload size={24} />\n        </button>\n        <button\n          onClick={() => setIsCameraOpen(true)}\n          className=\"pointer-events-auto flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-full shadow-2xl shadow-emerald-900/20 active:scale-95 transition-transform group\"\n        >\n          <Plus className=\"group-hover:rotate-90 transition-transform\" />\n          <span className=\"font-bold tracking-tight\">Start Scanning</span>\n        </button>\n      </div>\n\n      {isCameraOpen && (\n        <CameraView \n          onCapture={handleCapture} \n          onClose={() => setIsCameraOpen(false)} \n        />\n      )}\n    </div>\n  );\n};\n\nexport default App;\n"
+            }
+          ]
+        }
+      ]
+    },
+    "createdTimestamp": {
+      "seconds": 1771503535,
+      "nanos": 207000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771503546,
+      "nanos": 688000000
+    }
+  },
+  {
+    "id": 8,
+    "author": "user",
+    "payload": {
+      "type": "text",
+      "text": "Add a \"Nearest Supplier\" feature:\n1. Use the 'Google Maps' tool to ground the response.\n2. Based on the diagnosis (e.g., Copper Oxychloride for Rust), find the 3 nearest agricultural supply stores in Zimbabwe (look for keywords like \"Agro-dealers\", \"Farm supplies\", or \"Agricura\") relative to the user's current location.\n3. Display the shop name, their distance from the user, and a \"Get Directions\" link that opens Google Maps.\n4. If no specific agro-dealer is found, suggest the nearest major business center in Zimbabwe where these chemicals are typically sold (like Mbare Musika for Harare or Renkini for Bulawayo).",
+      "files": [],
+      "fileUploads": [],
+      "cssBlocks": [],
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771504059,
+      "nanos": 795000000
+    }
+  },
+  {
+    "id": 9,
+    "author": "model",
+    "payload": {
+      "type": "thinking",
+      "text": "**Considering Supplier Proximity**\n\nI'm currently focused on integrating a \"Nearest Supplier\" function into the \"Plant Doctor\" web app. The approach leverages the `googleMaps` tool from the Gemini API to identify agricultural supply stores. My priority is to refine the search parameters, ensuring they are based on the plant's diagnosis, whether it calls for chemical or organic solutions.\n\n\n**Refining Gemini API Requests**\n\nI'm now zeroing in on the Gemini API calls. I've updated `types.ts` to integrate supplier data with the diagnosis and I'm updating `services/geminiService.ts`. I need to use the `googleMaps` tool, but that means ensuring I'm using a Gemini 2.5 series model, probably `gemini-2.5-flash` or similar. I'll need to update the prompt significantly to request nearby suppliers based on the required treatment.\n\n\n**Revising API Architecture**\n\nI'm now overhauling my approach for the Gemini API. I discovered I can't use `responseSchema` with `googleMaps`, forcing me to handle a markdown response. This complicates my JSON structure. Instead of splitting this into two calls, I'm adapting to parse the response or combine all info into the markdown response. I've chosen `gemini-2.5-flash` per the tool's guidelines. The current diagnosis logic must be updated.\n\n\n**Integrating Geolocation Functionality**\n\nI'm now integrating geolocation into `App.tsx` to get the user's location. This will be fetched on mount or when a diagnosis begins. I am also working on the UI, and adding a new \"Suppliers\" section. In `geminiService.ts`, I'm sticking with `gemini-2.5-flash` for diagnosis and map integration. Since `responseSchema` is out, I'm opting to prompt the model for structured data in markdown and parse it or display as markdown. I'll need to use grounding metadata from the tool as well.\n\n\n",
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771504059,
+      "nanos": 795000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771504092,
+      "nanos": 348000000
+    }
+  },
+  {
+    "id": 10,
+    "author": "model",
+    "payload": {
+      "type": "generationTable",
+      "entries": [
+        {
+          "path": "metadata.json",
+          "generationType": 1,
+          "isDone": true,
+          "description": "Add geolocation permission to the application metadata.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\n{\n  \"name\": \"Botanist AI - Digital Plant Doctor\",\n  \"description\": \"A professional-grade plant health diagnostic tool powered by Gemini AI, providing real-time analysis, disease identification, and detailed treatment plans.\",\n  \"requestFramePermissions\": [\n    \"camera\",\n    \"geolocation\"\n  ]\n}\n"
+            }
+          ]
+        },
+        {
+          "path": "types.ts",
+          "generationType": 1,
+          "isDone": true,
+          "description": "Update types to include Supplier information.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nexport interface Supplier {\n  name: string;\n  distance: string;\n  directionsUrl: string;\n}\n\nexport interface PlantDiagnosis {\n  plantName: string;\n  scientificName: string;\n  status: 'Healthy' | 'Diseased' | 'Stressed' | 'Unknown';\n  confidenceScore: number;\n  conditionName: string;\n  description: string;\n  immediateActions: string[];\n  organicTreatment: string;\n  chemicalTreatment: string;\n  preventionTips: string[];\n  suppliers?: Supplier[];\n}\n\nexport interface DiagnosisHistoryItem {\n  id: string;\n  timestamp: number;\n  image: string;\n  diagnosis: PlantDiagnosis;\n}\n"
+            }
+          ]
+        },
+        {
+          "path": "services/geminiService.ts",
+          "generationType": 1,
+          "isDone": true,
+          "description": "Update geminiService to use gemini-2.5-flash with Google Maps tool for finding nearest suppliers in Zimbabwe.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport { GoogleGenAI } from \"@google/genai\";\nimport { PlantDiagnosis, Supplier } from \"../types\";\n\nexport const diagnosePlant = async (\n  imageBase64: string, \n  location?: { latitude: number; longitude: number }\n): Promise<PlantDiagnosis> => {\n  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });\n  \n  // Note: Using gemini-2.5-flash because Google Maps grounding is only supported in 2.5 series.\n  // We must not use responseSchema or responseMimeType when using googleMaps tool.\n  const response = await ai.models.generateContent({\n    model: 'gemini-2.5-flash',\n    contents: {\n      parts: [\n        {\n          inlineData: {\n            mimeType: 'image/jpeg',\n            data: imageBase64,\n          },\n        },\n        {\n          text: `Act as a world-class digital botanist and agricultural supply expert in Zimbabwe. \n          1. Analyze this plant image. Identify the plant and detect any diseases, nutrient deficiencies, or pest infestations.\n          2. Provide scientific names and actionable organic and chemical treatment advice.\n          3. BASED ON THE TREATMENT NEEDED (e.g. specific fungicide or pesticide), find the 3 nearest agricultural supply stores in Zimbabwe (look for \"Agro-dealers\", \"Farm supplies\", \"Agricura\", \"Windmill\", or \"ZFC\") relative to the user's current coordinates.\n          4. If no specific agro-dealer is found, suggest the nearest major business center in Zimbabwe where these are sold (like Mbare Musika for Harare, Renkini for Bulawayo, or Sakubva for Mutare).\n          \n          YOU MUST RETURN THE RESPONSE AS A VALID JSON OBJECT ONLY. DO NOT INCLUDE MARKDOWN BLOCKS OR OTHER TEXT.\n          \n          JSON structure:\n          {\n            \"plantName\": string,\n            \"scientificName\": string,\n            \"status\": \"Healthy\" | \"Diseased\" | \"Stressed\" | \"Unknown\",\n            \"confidenceScore\": number,\n            \"conditionName\": string,\n            \"description\": string,\n            \"immediateActions\": string[],\n            \"organicTreatment\": string,\n            \"chemicalTreatment\": string,\n            \"preventionTips\": string[],\n            \"suppliers\": [\n              { \"name\": string, \"distance\": string, \"directionsUrl\": string }\n            ]\n          }`\n        }\n      ]\n    },\n    config: {\n      tools: [{ googleMaps: {} }],\n      toolConfig: {\n        retrievalConfig: {\n          latLng: location ? {\n            latitude: location.latitude,\n            longitude: location.longitude\n          } : undefined\n        }\n      }\n    }\n  });\n\n  const text = response.text;\n  if (!text) {\n    throw new Error(\"Failed to get diagnosis from AI\");\n  }\n\n  try {\n    // Attempt to parse JSON. Sometimes model includes markdown wrappers despite instructions.\n    const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();\n    const parsed = JSON.parse(cleanJson) as PlantDiagnosis;\n\n    // Enrich directions URLs from grounding chunks if the model didn't provide them accurately\n    const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;\n    if (groundingChunks && parsed.suppliers) {\n      parsed.suppliers = parsed.suppliers.map((s, idx) => {\n        const chunk = groundingChunks.find((c: any) => c.maps?.title?.toLowerCase().includes(s.name.toLowerCase()));\n        if (chunk?.maps?.uri) {\n          return { ...s, directionsUrl: chunk.maps.uri };\n        }\n        return s;\n      });\n    }\n\n    return parsed;\n  } catch (e) {\n    console.error(\"JSON Parse Error:\", e, \"Raw text:\", text);\n    throw new Error(\"Invalid response format from AI\");\n  }\n};\n"
+            }
+          ]
+        },
+        {
+          "path": "components/DiagnosisCard.tsx",
+          "generationType": 1,
+          "isDone": true,
+          "description": "Update DiagnosisCard to include the Nearest Supplier section with maps links.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React from 'react';\nimport { Leaf, AlertCircle, ShieldCheck, Beaker, Sprout, Info, MapPin, ExternalLink, Building2 } from 'lucide-react';\nimport { PlantDiagnosis } from '../types';\n\ninterface DiagnosisCardProps {\n  diagnosis: PlantDiagnosis;\n  image?: string;\n}\n\nconst DiagnosisCard: React.FC<DiagnosisCardProps> = ({ diagnosis, image }) => {\n  const isHealthy = diagnosis.status === 'Healthy';\n\n  return (\n    <div className=\"w-full animate-in fade-in slide-in-from-bottom-4 duration-500\">\n      <div className=\"bg-white rounded-3xl shadow-xl overflow-hidden border border-emerald-100\">\n        {/* Header Section */}\n        <div className={`p-6 ${isHealthy ? 'bg-emerald-50' : 'bg-amber-50'} border-b border-emerald-100`}>\n          <div className=\"flex justify-between items-start\">\n            <div>\n              <h2 className=\"text-2xl font-bold text-slate-800\">{diagnosis.plantName}</h2>\n              <p className=\"text-slate-500 italic text-sm\">{diagnosis.scientificName}</p>\n            </div>\n            <div className={`px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2 ${\n              isHealthy ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white'\n            }`}>\n              {isHealthy ? <ShieldCheck size={16} /> : <AlertCircle size={16} />}\n              {diagnosis.status}\n            </div>\n          </div>\n          \n          <div className=\"mt-4 flex items-center gap-2 text-slate-600\">\n            <Info size={18} className=\"text-emerald-500\" />\n            <span className=\"text-sm font-medium\">Confidence Level: {diagnosis.confidenceScore}%</span>\n          </div>\n        </div>\n\n        <div className=\"p-6 space-y-8\">\n          {/* Main Observation */}\n          <section>\n            <div className=\"flex items-center gap-2 mb-3\">\n              <Leaf className=\"text-emerald-600\" size={20} />\n              <h3 className=\"font-bold text-slate-800\">Observation</h3>\n            </div>\n            <p className=\"text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-2xl\">\n              <span className=\"font-semibold text-slate-800\">{diagnosis.conditionName}:</span> {diagnosis.description}\n            </p>\n          </section>\n\n          {/* Treatment Engine */}\n          <div className=\"grid grid-cols-1 md:grid-cols-2 gap-6\">\n            <div className=\"bg-emerald-50/50 rounded-2xl p-5 border border-emerald-100\">\n              <div className=\"flex items-center gap-2 mb-3\">\n                <Sprout className=\"text-emerald-700\" size={20} />\n                <h4 className=\"font-bold text-emerald-900\">Organic Solutions</h4>\n              </div>\n              <p className=\"text-sm text-emerald-800 leading-relaxed\">\n                {diagnosis.organicTreatment}\n              </p>\n            </div>\n            <div className=\"bg-sky-50 rounded-2xl p-5 border border-sky-100\">\n              <div className=\"flex items-center gap-2 mb-3\">\n                <Beaker className=\"text-sky-700\" size={20} />\n                <h4 className=\"font-bold text-sky-900\">Chemical Recommendation</h4>\n              </div>\n              <p className=\"text-sm text-sky-800 leading-relaxed\">\n                {diagnosis.chemicalTreatment}\n              </p>\n            </div>\n          </div>\n\n          {/* Nearest Suppliers Section */}\n          {diagnosis.suppliers && diagnosis.suppliers.length > 0 && (\n            <section className=\"animate-in fade-in slide-in-from-top-2\">\n              <div className=\"flex items-center gap-2 mb-4\">\n                <MapPin className=\"text-red-500\" size={20} />\n                <h3 className=\"font-bold text-slate-800\">Nearest Suppliers (Zimbabwe)</h3>\n              </div>\n              <div className=\"space-y-3\">\n                {diagnosis.suppliers.map((supplier, idx) => (\n                  <div key={idx} className=\"flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-2xl\">\n                    <div className=\"flex gap-3 items-center\">\n                      <div className=\"p-2 bg-white rounded-lg border border-slate-200 shadow-sm\">\n                        <Building2 size={18} className=\"text-slate-400\" />\n                      </div>\n                      <div>\n                        <h4 className=\"text-sm font-bold text-slate-800\">{supplier.name}</h4>\n                        <p className=\"text-xs text-slate-500\">{supplier.distance}</p>\n                      </div>\n                    </div>\n                    <a \n                      href={supplier.directionsUrl} \n                      target=\"_blank\" \n                      rel=\"noopener noreferrer\"\n                      className=\"flex items-center gap-1 text-xs font-bold text-emerald-600 bg-white px-3 py-2 rounded-xl border border-emerald-100 shadow-sm hover:bg-emerald-50 transition-colors\"\n                    >\n                      Directions\n                      <ExternalLink size={12} />\n                    </a>\n                  </div>\n                ))}\n              </div>\n            </section>\n          )}\n\n          {/* Immediate Actions */}\n          <section>\n            <h4 className=\"font-bold text-slate-800 mb-3 text-sm uppercase tracking-wider\">Immediate Actions</h4>\n            <ul className=\"space-y-2\">\n              {diagnosis.immediateActions.map((action, idx) => (\n                <li key={idx} className=\"flex items-start gap-3 text-slate-600 text-sm\">\n                  <div className=\"mt-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0\" />\n                  {action}\n                </li>\n              ))}\n            </ul>\n          </section>\n\n          {/* Prevention */}\n          <section className=\"bg-slate-50 p-5 rounded-2xl border border-slate-200\">\n            <h4 className=\"font-bold text-slate-800 mb-3 text-sm uppercase tracking-wider\">Future Prevention</h4>\n            <div className=\"flex flex-wrap gap-2\">\n              {diagnosis.preventionTips.map((tip, idx) => (\n                <span key={idx} className=\"bg-white border border-slate-200 px-3 py-1 rounded-lg text-xs font-medium text-slate-600\">\n                  {tip}\n                </span>\n              ))}\n            </div>\n          </section>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default DiagnosisCard;\n"
+            }
+          ]
+        },
+        {
+          "path": "App.tsx",
+          "generationType": 1,
+          "isDone": true,
+          "description": "Implement geolocation fetching before diagnosis to provide context for the Google Maps tool.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React, { useState, useEffect, useRef } from 'react';\nimport { Plus, Leaf, Loader2, Sparkles, Sprout, Upload, MapPin } from 'lucide-react';\nimport CameraView from './components/CameraView';\nimport DiagnosisCard from './components/DiagnosisCard';\nimport HistoryBar from './components/HistoryBar';\nimport { diagnosePlant } from './services/geminiService';\nimport { PlantDiagnosis, DiagnosisHistoryItem } from './types';\n\nconst STORAGE_KEY = 'botanist_ai_history';\n\nconst App: React.FC = () => {\n  const [isCameraOpen, setIsCameraOpen] = useState(false);\n  const [isAnalyzing, setIsAnalyzing] = useState(false);\n  const [currentDiagnosis, setCurrentDiagnosis] = useState<PlantDiagnosis | null>(null);\n  const [history, setHistory] = useState<DiagnosisHistoryItem[]>([]);\n  const [error, setError] = useState<string | null>(null);\n  const [location, setLocation] = useState<{ latitude: number; longitude: number } | undefined>();\n  const fileInputRef = useRef<HTMLInputElement>(null);\n\n  // Load history and geolocation on mount\n  useEffect(() => {\n    const saved = localStorage.getItem(STORAGE_KEY);\n    if (saved) {\n      setHistory(JSON.parse(saved));\n    }\n\n    if (navigator.geolocation) {\n      navigator.geolocation.getCurrentPosition(\n        (pos) => setLocation({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),\n        (err) => console.warn(\"Geolocation denied or unavailable:\", err),\n        { enableHighAccuracy: true }\n      );\n    }\n  }, []);\n\n  const saveToHistory = (diagnosis: PlantDiagnosis, image: string) => {\n    const newItem: DiagnosisHistoryItem = {\n      id: crypto.randomUUID(),\n      timestamp: Date.now(),\n      image,\n      diagnosis\n    };\n    const updatedHistory = [newItem, ...history].slice(0, 5);\n    setHistory(updatedHistory);\n    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedHistory));\n  };\n\n  const handleCapture = async (base64Image: string) => {\n    setIsCameraOpen(false);\n    setIsAnalyzing(true);\n    setError(null);\n    \n    try {\n      // Re-fetch location just in case it wasn't ready\n      let finalLoc = location;\n      if (!finalLoc && navigator.geolocation) {\n        try {\n          const pos = await new Promise<GeolocationPosition>((res, rej) => \n            navigator.geolocation.getCurrentPosition(res, rej, { timeout: 3000 })\n          );\n          finalLoc = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };\n          setLocation(finalLoc);\n        } catch (e) {\n          console.warn(\"Could not fetch location for diagnosis context\");\n        }\n      }\n\n      const result = await diagnosePlant(base64Image, finalLoc);\n      setCurrentDiagnosis(result);\n      saveToHistory(result, base64Image);\n    } catch (err) {\n      setError(\"Diagnosis failed. Please ensure the plant is clearly visible and try again.\");\n      console.error(err);\n    } finally {\n      setIsAnalyzing(false);\n    }\n  };\n\n  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {\n    const file = event.target.files?.[0];\n    if (!file) return;\n\n    const reader = new FileReader();\n    reader.onloadend = () => {\n      const base64String = (reader.result as string).split(',')[1];\n      handleCapture(base64String);\n    };\n    reader.readAsDataURL(file);\n    event.target.value = '';\n  };\n\n  const triggerFileUpload = () => {\n    fileInputRef.current?.click();\n  };\n\n  return (\n    <div className=\"min-h-screen pb-32\">\n      <input \n        type=\"file\" \n        ref={fileInputRef} \n        onChange={handleFileUpload} \n        accept=\"image/*\" \n        className=\"hidden\" \n      />\n\n      <header className=\"sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-emerald-50\">\n        <div className=\"max-w-xl mx-auto px-6 h-16 flex items-center justify-between\">\n          <div className=\"flex items-center gap-2\">\n            <div className=\"w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center\">\n              <Sprout className=\"text-white\" size={18} />\n            </div>\n            <h1 className=\"text-lg font-bold text-slate-900\">Botanist AI</h1>\n          </div>\n          <div className=\"flex items-center gap-3\">\n            {location && (\n              <div className=\"flex items-center gap-1 text-[10px] bg-slate-100 text-slate-500 px-2 py-1 rounded-full border border-slate-200\">\n                <MapPin size={10} className=\"text-emerald-500\" />\n                <span>Loc Active</span>\n              </div>\n            )}\n            <button \n              onClick={() => {\n                setCurrentDiagnosis(null);\n                setError(null);\n              }}\n              className=\"text-xs font-medium text-emerald-600 hover:bg-emerald-50 px-3 py-1 rounded-full transition-colors\"\n            >\n              Clear\n            </button>\n          </div>\n        </div>\n      </header>\n\n      <main className=\"max-w-xl mx-auto px-6 py-8\">\n        {!isAnalyzing && !currentDiagnosis && !error && (\n          <div className=\"text-center py-12 px-6\">\n            <div className=\"w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6\">\n              <Leaf className=\"text-emerald-500\" size={32} />\n            </div>\n            <h2 className=\"text-2xl font-bold text-slate-800 mb-2\">Ready to heal your plants?</h2>\n            <p className=\"text-slate-500 mb-8 max-w-xs mx-auto\">\n              Capture or upload a clear photo of the leaves or stems for a botanical diagnosis and local supplier search.\n            </p>\n            <div className=\"bg-emerald-50 border border-emerald-100 p-4 rounded-2xl flex items-start gap-3 text-left mb-8\">\n              <Sparkles className=\"text-emerald-600 shrink-0\" size={20} />\n              <p className=\"text-xs text-emerald-800 leading-relaxed\">\n                Powered by Gemini 2.5 Flash for disease detection and Google Maps grounding to find the closest Zimbabwe agro-dealers.\n              </p>\n            </div>\n          </div>\n        )}\n\n        {isAnalyzing && (\n          <div className=\"flex flex-col items-center justify-center py-20 animate-pulse\">\n            <div className=\"relative\">\n              <div className=\"absolute inset-0 bg-emerald-400 rounded-full blur-xl opacity-20 animate-ping\" />\n              <Loader2 className=\"animate-spin text-emerald-500 mb-6 h-12 w-12\" />\n            </div>\n            <h3 className=\"text-lg font-bold text-slate-800\">Analyzing Specimen</h3>\n            <p className=\"text-sm text-slate-500 mt-2\">Connecting to Digital Botanist Network...</p>\n            <p className=\"text-[10px] text-slate-400 mt-1\">Locating nearest Zimbabwe agro-dealers...</p>\n          </div>\n        )}\n\n        {error && (\n          <div className=\"bg-red-50 border border-red-100 p-6 rounded-3xl text-center mb-8\">\n            <h3 className=\"text-red-800 font-bold mb-2\">Analysis Interrupted</h3>\n            <p className=\"text-red-600 text-sm mb-4\">{error}</p>\n            <div className=\"flex gap-3 justify-center\">\n              <button \n                onClick={() => setIsCameraOpen(true)}\n                className=\"bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-bold\"\n              >\n                Retry Scan\n              </button>\n              <button \n                onClick={triggerFileUpload}\n                className=\"bg-red-50 text-red-700 px-4 py-2 rounded-full text-sm font-bold border border-red-200\"\n              >\n                Upload Instead\n              </button>\n            </div>\n          </div>\n        )}\n\n        {currentDiagnosis && (\n          <DiagnosisCard diagnosis={currentDiagnosis} />\n        )}\n\n        <HistoryBar \n          items={history} \n          onSelectItem={(item) => {\n            setCurrentDiagnosis(item.diagnosis);\n            window.scrollTo({ top: 0, behavior: 'smooth' });\n          }} \n        />\n      </main>\n\n      <div className=\"fixed bottom-8 left-0 right-0 px-6 flex justify-center pointer-events-none gap-3\">\n        <button\n          onClick={triggerFileUpload}\n          className=\"pointer-events-auto flex items-center justify-center w-14 h-14 bg-white border border-slate-200 text-slate-700 rounded-full shadow-lg active:scale-95 transition-transform\"\n          title=\"Upload Photo\"\n        >\n          <Upload size={24} />\n        </button>\n        <button\n          onClick={() => setIsCameraOpen(true)}\n          className=\"pointer-events-auto flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-full shadow-2xl shadow-emerald-900/20 active:scale-95 transition-transform group\"\n        >\n          <Plus className=\"group-hover:rotate-90 transition-transform\" />\n          <span className=\"font-bold tracking-tight\">Start Scanning</span>\n        </button>\n      </div>\n\n      {isCameraOpen && (\n        <CameraView \n          onCapture={handleCapture} \n          onClose={() => setIsCameraOpen(false)} \n        />\n      )}\n    </div>\n  );\n};\n\nexport default App;\n"
+            }
+          ]
+        }
+      ]
+    },
+    "createdTimestamp": {
+      "seconds": 1771504092,
+      "nanos": 348000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771504092,
+      "nanos": 885000000
+    }
+  }
+]

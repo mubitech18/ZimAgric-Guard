@@ -1,0 +1,8 @@
+{
+  "name": "Remix: ZimAgri-Guard AI",
+  "description": "Innovative agricultural diagnostic tool for Zimbabwe farmers, supporting local languages (Shona, Ndebele) and Pfumvudza organic practices.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}
